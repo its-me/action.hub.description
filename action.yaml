@@ -1,0 +1,50 @@
+name: Docker Hub description
+description: Update a Docker Hub repository's short and full description from a markdown file.
+author: Sergey Kanafyev
+
+branding:
+  icon: book-open
+  color: blue
+
+inputs:
+  username:
+    description: Docker Hub username
+    required: true
+  password:
+    description: Docker Hub password (used to obtain a login token; a personal access token does not work for this endpoint)
+    required: true
+  repository:
+    description: Docker Hub repository name (without the username, e.g. "workflow")
+    required: true
+  file:
+    description: >
+      Path to a markdown file. Its first line must be an HTML comment holding
+      the short description, e.g. "<!-- short description -->"; the rest of
+      the file (from the second line on) becomes the full description.
+    required: false
+    default: HUB.md
+
+runs:
+  using: composite
+  steps:
+    - name: Update description
+      shell: bash
+      env:
+        HUB_USERNAME: ${{ inputs.username }}
+        HUB_PASSWORD: ${{ inputs.password }}
+        HUB_REPOSITORY: ${{ inputs.repository }}
+        HUB_FILE: ${{ inputs.file }}
+      run: |
+        token=$(curl -fsSL -X POST "https://hub.docker.com/v2/users/login" \
+          -H "Content-Type: application/json" \
+          -d "{\"username\":\"$HUB_USERNAME\",\"password\":\"$HUB_PASSWORD\"}" \
+          | jq -r '.token')
+        short_description=$(sed -n '1s/^<!-- \(.*\) -->$/\1/p' "$HUB_FILE")
+        full_description=$(tail -n +2 "$HUB_FILE")
+        curl -fsSL -X PATCH "https://hub.docker.com/v2/repositories/$HUB_USERNAME/$HUB_REPOSITORY/" \
+          -H "Authorization: Bearer $token" \
+          -H "Content-Type: application/json" \
+          --data-binary "$(jq -n \
+            --arg description "$short_description" \
+            --arg full_description "$full_description" \
+            '{description: $description, full_description: $full_description}')"
