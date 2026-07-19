@@ -27,7 +27,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - uses: its-me/action.hub.description@v1
+      - uses: its-me/action.hub.description@v0
         with:
           username: ${{ secrets.HUB_USERNAME }}
           password: ${{ secrets.HUB_PASSWORD }}
