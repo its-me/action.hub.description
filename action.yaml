@@ -1,4 +1,4 @@
-name: Docker Hub description
+name: Docker Hub repository description
 description: Update a Docker Hub repository's short and full description from a markdown file.
 author: Sergey Kanafyev
 

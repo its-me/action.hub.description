@@ -1,4 +1,4 @@
-# Docker Hub description
+# Docker Hub repository description
 
 A GitHub Action that updates a Docker Hub repository's short and full
 description from a markdown file.
