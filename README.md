@@ -60,6 +60,13 @@ a Unicode-safe way — truncation always lands on a whole character,
 never mid-codepoint. When truncation happens, a `::warning::` annotation
 is emitted in the job log.
 
+## Retries
+
+Both the login request and the description update request retry up to
+3 times (5-second delay) on transient failures — timeouts, connection
+refused, and HTTP 408/429/5xx — via `curl --retry`. Permanent failures
+(e.g. bad credentials) are not retried.
+
 ## License
 
 This project is licensed under the MIT License.
