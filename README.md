@@ -17,7 +17,7 @@ description from a markdown file.
 ## Usage
 
 ```yaml
-name: Update descriptions
+name: Docker Hub Description Update
 
 on:
   push:
@@ -27,7 +27,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-hub:
+  hub:
     runs-on: ubuntu-slim
     permissions:
       contents: read
