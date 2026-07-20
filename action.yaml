@@ -71,6 +71,22 @@ runs:
               | gsub("(?<left>(?<!!)\\[[^\\]]+\\])\\((?<url>[^:)#][^:)]*)\\)"; "\(.left)(" + $blob + "\(.url))")
             ')
         fi
+        max_bytes=25000
+        if [ "$(printf '%s' "$full_description" | wc -c)" -gt "$max_bytes" ]; then
+          echo "::warning::Description exceeds Docker Hub's ${max_bytes}-byte limit and has been truncated."
+          full_description=$(jq -n \
+            --arg content "$full_description" \
+            --argjson max "$max_bytes" \
+            -r '
+              def utf8len:
+                explode | map(if . < 128 then 1 elif . < 2048 then 2 elif . < 65536 then 3 else 4 end) | add // 0;
+              def truncate_bytes(n):
+                if (. | utf8len) <= n then .
+                else . as $s | first(range(n; -1; -1) as $k | $s[0:$k] | select((. | utf8len) <= n))
+                end;
+              $content | truncate_bytes($max)
+            ')
+        fi
         curl -fsSL -X PATCH "https://hub.docker.com/v2/repositories/$HUB_USERNAME/$HUB_REPOSITORY/" \
           -H "Authorization: Bearer $token" \
           -H "Content-Type: application/json" \

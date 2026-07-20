@@ -53,6 +53,13 @@ and continuing for the rest of the file.
 The first line must be an HTML comment holding the short description;
 everything from the second line onward becomes the full description.
 
+## Length limit
+
+The full description is truncated to Docker Hub's 25,000-byte limit in
+a Unicode-safe way — truncation always lands on a whole character,
+never mid-codepoint. When truncation happens, a `::warning::` annotation
+is emitted in the job log.
+
 ## License
 
 This project is licensed under the MIT License.
