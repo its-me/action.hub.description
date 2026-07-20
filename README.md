@@ -52,6 +52,11 @@ and continuing for the rest of the file.
 
 The first line must be an HTML comment holding the short description;
 everything from the second line onward becomes the full description.
+Leading/trailing whitespace around `<!--`/`-->` and inside the comment
+is trimmed, and both LF and CRLF line endings are accepted. If the
+first line doesn't match this format at all, a `::warning::`
+annotation is emitted and the short description is sent empty rather
+than failing silently.
 
 ## Length limit
 

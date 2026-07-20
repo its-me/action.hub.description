@@ -62,7 +62,11 @@ runs:
           echo "::error::Docker Hub login did not return a token. The response may be malformed (e.g. an unexpected page from a proxy) or the credentials may be wrong."
           exit 1
         fi
-        short_description=$(sed -n '1s/^<!-- \(.*\) -->$/\1/p' "$HUB_FILE")
+        short_description=$(sed -n '1s/^[[:space:]]*<!--\(.*\)-->[[:space:]]*\r\{0,1\}$/\1/p' "$HUB_FILE")
+        short_description=$(echo -n "$short_description" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        if [ -z "$short_description" ]; then
+          echo "::warning::Could not extract a short description from the first line of $HUB_FILE. Expected an HTML comment like \"<!-- short description -->\"; the short description will be sent empty."
+        fi
         full_description=$(tail -n +2 "$HUB_FILE")
         if [ "$HUB_URL_COMPLETION" = "true" ]; then
           full_description=$(jq -n \
