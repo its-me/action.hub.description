@@ -90,6 +90,4 @@ refused, and HTTP 408/429/5xx — via `curl --retry`. Permanent failures
 
 ## License
 
-This project is licensed under the MIT License.
-
-See [LICENSE](LICENSE) for the full text.
+[MIT](LICENSE)
