@@ -57,8 +57,11 @@ everything from the second line onward becomes the full description.
 
 The full description is truncated to Docker Hub's 25,000-byte limit in
 a Unicode-safe way — truncation always lands on a whole character,
-never mid-codepoint. When truncation happens, a `::warning::` annotation
-is emitted in the job log.
+never mid-codepoint — and then backs off to the last complete line, so
+a cut never lands mid-way through a markdown link or image reference
+(relevant since `url-completion` can expand a short relative path into
+a much longer absolute URL). When truncation happens, a `::warning::`
+annotation is emitted in the job log.
 
 ## Retries
 
