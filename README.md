@@ -60,8 +60,10 @@ a Unicode-safe way — truncation always lands on a whole character,
 never mid-codepoint — and then backs off to the last complete line, so
 a cut never lands mid-way through a markdown link or image reference
 (relevant since `url-completion` can expand a short relative path into
-a much longer absolute URL). When truncation happens, a `::warning::`
-annotation is emitted in the job log.
+a much longer absolute URL). If the cut leaves an unclosed ` ``` ` code
+fence open, a closing fence is appended so the rest of the page doesn't
+render as code. When truncation happens, a `::warning::` annotation is
+emitted in the job log.
 
 ## Retries
 
