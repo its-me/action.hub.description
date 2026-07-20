@@ -37,7 +37,7 @@ jobs:
 | `password`         | Docker Hub password. Used to obtain a login token — a personal access token does not work against this endpoint.                                        | _(none)_  |
 | `repository`       | Docker Hub repository name, without the username (e.g. `workflow`).                                                                                      | _(none)_  |
 | `description-file` | Path to a markdown file. Its first line must be an HTML comment holding the short description (e.g. `<!-- short description -->`); the rest of the file becomes the full description. | `HUB.md`  |
-| `url-completion`   | Rewrite relative markdown links/images in the full description to absolute GitHub URLs, since Docker Hub renders the description outside the repository's context. Covers plain `![alt](path)` and `[label](path)` references; titled links/images, in-page anchors, and image-wrapped-in-link badges are left as-is. | `false`   |
+| `url-completion`   | Rewrite relative markdown links/images in the full description to absolute GitHub URLs, since Docker Hub renders the description outside the repository's context. Covers `![alt](path)` and `[label](path)` references (with or without a title), `[![alt](img)](path)` badge-links, and `[ref]: path` link reference definitions. In-page anchors (`#section`) are deliberately left as-is. | `false`   |
 | `image-extensions` | Comma-separated file extensions treated as images when `url-completion` is enabled.                                                                     | `bmp,gif,jpg,jpeg,png,svg,webp` |
 
 ## Description file format
