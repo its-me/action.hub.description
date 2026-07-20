@@ -58,6 +58,10 @@ runs:
           -H "Content-Type: application/json" \
           -d "{\"username\":\"$HUB_USERNAME\",\"password\":\"$HUB_PASSWORD\"}" \
           | jq -r '.token')
+        if [ -z "$token" ] || [ "$token" = "null" ]; then
+          echo "::error::Docker Hub login did not return a token. The response may be malformed (e.g. an unexpected page from a proxy) or the credentials may be wrong."
+          exit 1
+        fi
         short_description=$(sed -n '1s/^<!-- \(.*\) -->$/\1/p' "$HUB_FILE")
         full_description=$(tail -n +2 "$HUB_FILE")
         if [ "$HUB_URL_COMPLETION" = "true" ]; then
