@@ -69,26 +69,15 @@ runs:
         fi
         full_description=$(tail -n +2 "$HUB_FILE")
         if [ "$HUB_URL_COMPLETION" = "true" ]; then
-          full_description=$(jq -n \
-            --arg mode url-completion \
-            --arg content "$full_description" \
-            --arg exts_raw "$HUB_IMAGE_EXTS" \
-            --arg raw "$REPO_URL/raw/$REF_NAME/" \
-            --arg blob "$REPO_URL/blob/$REF_NAME/" \
-            --argjson max 0 \
-            -r -f "$GITHUB_ACTION_PATH/markdown.jq")
+          full_description=$(printf '%s' "$full_description" | python3 "$GITHUB_ACTION_PATH/markdown.py" url-completion \
+            --exts "$HUB_IMAGE_EXTS" \
+            --raw "$REPO_URL/raw/$REF_NAME/" \
+            --blob "$REPO_URL/blob/$REF_NAME/")
         fi
         max_bytes=25000
         if [ "$(printf '%s' "$full_description" | wc -c)" -gt "$max_bytes" ]; then
           echo "::warning::Description exceeds Docker Hub's ${max_bytes}-byte limit and has been truncated."
-          full_description=$(jq -n \
-            --arg mode truncate \
-            --arg content "$full_description" \
-            --arg exts_raw "" \
-            --arg raw "" \
-            --arg blob "" \
-            --argjson max "$max_bytes" \
-            -r -f "$GITHUB_ACTION_PATH/markdown.jq")
+          full_description=$(printf '%s' "$full_description" | python3 "$GITHUB_ACTION_PATH/markdown.py" truncate --max "$max_bytes")
         fi
         curl -fsSL --retry 3 --retry-delay 5 --retry-connrefused \
           -X PATCH "https://hub.docker.com/v2/repositories/$HUB_USERNAME/$HUB_REPOSITORY/" \

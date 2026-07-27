@@ -5,11 +5,12 @@ description from a markdown file.
 
 ## Why this exists
 
-- It's a plain composite action — a handful of `curl`/`jq` calls —
-  with no Docker daemon required to start it, so it runs on minimal
-  runners, including this account's `ubuntu-slim` runner.
-- The entire implementation is the ~30 lines visible directly in
-  `action.yaml`. Nothing to build, nothing bundled to trust blindly.
+- It's a plain composite action — `curl`/`jq` calls plus a small
+  Python script for the regex-heavy markdown rewriting — with no
+  Docker daemon required to start it, so it runs on minimal runners,
+  including this account's `ubuntu-slim` runner.
+- The entire implementation is `action.yaml` plus `markdown.py`.
+  Nothing to build, nothing bundled to trust blindly.
 - The short description comes from the first line of
   `description-file`, so there's one file to maintain instead of a
   file plus a duplicated string in the workflow YAML.
